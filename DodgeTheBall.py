@@ -28,7 +28,7 @@ PLAYER_SPEED   = 12
 MAX_SHOTS      = 2
 SHOT_SPEED     = 10
 ALIEN_SPEED    = 5
-ALIEN_ODDS     = 200
+ALIEN_ODDS     = 40
 EXPLODE_TIME   = 6
 SCREENRECT     = Rect(0, 0, 640, 480)
 
@@ -97,17 +97,17 @@ class Alien(Actor):
     "Destroy him or suffer"
     def __init__(self):
         Actor.__init__(self, Img.alien)
-        self.facing = random.choice((-1,1)) * ALIEN_SPEED
-        if self.facing < 0:
-            self.rect.right = SCREENRECT.right
+        #self.facing = random.choice((-1,1)) * ALIEN_SPEED
+        
+        self.rect.right = random.choice(range(SCREENRECT.left, SCREENRECT.right, 10))
             
     def update(self):
         global SCREENRECT
-        self.rect[0] = self.rect[0] + self.facing
-        if not SCREENRECT.contains(self.rect):
-            self.facing = -self.facing;
-            self.rect.top = self.rect.bottom + 3
-            self.rect = self.rect.clamp(SCREENRECT)
+        self.rect[1] = self.rect[1] + ALIEN_SPEED
+        # if not SCREENRECT.contains(self.rect):
+        #     self.facing = -self.facing;
+        #     self.rect.top = self.rect.bottom + 3
+        #     self.rect = self.rect.clamp(SCREENRECT)
 
 
 class Explosion(Actor):
