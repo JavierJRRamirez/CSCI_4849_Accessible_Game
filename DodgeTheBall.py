@@ -28,9 +28,9 @@ PLAYER_SPEED   = 12
 MAX_SHOTS      = 2
 SHOT_SPEED     = 10
 ALIEN_SPEED    = 5
-ALIEN_ODDS     = 40
+ALIEN_ODDS     = 100
 EXPLODE_TIME   = 6
-SCREENRECT     = Rect(0, 0, 640, 480)
+SCREENRECT     = Rect(0, 0, 1024, 768)
 
 
 #some globals for friendly access
@@ -143,6 +143,7 @@ def main():
     screen = pygame.display.set_mode(SCREENRECT.size, 0)
     clock = pygame.time.Clock()
 
+
     # Load the Resources
     Img.background = load_image('background.gif', 0)
     Img.shot = load_image('shot.gif', 1)
@@ -164,6 +165,8 @@ def main():
     aliens = [Alien()]
     shots = []
     explosions = []
+
+
 
     # Main loop
     while player.alive or explosions:
@@ -189,8 +192,19 @@ def main():
                 shots.remove(s)
 
         # Move the player
-        direction = keystate[K_RIGHT] - keystate[K_LEFT]
+        mousex, mousey = pygame.mouse.get_pos()
+        direction = 0
+        if mousex < 341:
+        	direction = -1
+        elif mousex > 682:
+        	direction = 1
+        else:
+        	direction = 0
+
+
+        # direction = keystate[K_RIGHT] - keystate[K_LEFT]
         player.move(direction)
+
 
         # Create new shots
         if not player.reloading and keystate[K_SPACE] and len(shots) < MAX_SHOTS:
@@ -225,6 +239,7 @@ def main():
         # Draw everybody
         for actor in [player] + aliens + shots + explosions:
             actor.draw(screen)
+
 
         pygame.display.update(dirtyrects)
         dirtyrects = []
