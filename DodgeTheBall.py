@@ -207,12 +207,12 @@ def main():
 
 
         # direction = keystate[K_RIGHT] - keystate[K_LEFT]
-        player.move(direction)
-        	direction = -1
-        elif mousex > 682:
-        	direction = 1
-        else:
-        	direction = 0
+        # player.move(direction)
+        	# direction = -1
+        # elif mousex > 682:
+        #	direction = 1
+        # else:
+        #	direction = 0
 
 
         # direction = keystate[K_RIGHT] - keystate[K_LEFT]
