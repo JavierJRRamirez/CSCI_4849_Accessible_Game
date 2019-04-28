@@ -195,6 +195,34 @@ def main():
 #            if s.rect.top <= 0:
 #                shots.remove(s)
 
+
+#        pygame.font.init()
+        frame_count = 0
+        frame_rate = 40
+        start_time = 90
+        total_seconds = frame_count // frame_rate
+    
+    # Divide by 60 to get total minutes
+        minutes = total_seconds // 60
+    
+    # Use modulus (remainder) to get seconds
+        seconds = total_seconds % 60
+    
+    # Use python string formatting to format in leading zeros
+        output_string = "Time: {0:02}:{1:02}".format(minutes, seconds)
+
+        myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        text = myfont.render(output_string, True, (0,0,0))
+        screen.blit(text,(0,0))
+        total_seconds = start_time - (frame_count // frame_rate)
+        if total_seconds < 0:
+            total_seconds = 0
+        frame_count += 1
+        clock.tick(frame_rate)
+        pygame.display.flip()
+
+
+
         # Move the player
         mousex, mousey = pygame.mouse.get_pos()
         direction = 0
