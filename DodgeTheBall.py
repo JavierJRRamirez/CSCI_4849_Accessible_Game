@@ -25,7 +25,7 @@ if not pygame.image.get_extended():
 FRAMES_PER_SEC = 40
 PLAYER_SPEED   = 12
 MAX_SHOTS      = 2
-SHOT_SPEED     = 10
+#SHOT_SPEED     = 10
 ALIEN_SPEED    = 5
 ALIEN_ODDS     = 100
 EXPLODE_TIME   = 6
@@ -128,15 +128,15 @@ class Explosion(Actor):
         self.life = self.life - 1
 
 
-class Shot(Actor):
-    "The big payload"
-    def __init__(self, player):
-        Actor.__init__(self, Img.shot)
-        self.rect.centerx = player.rect.centerx
-        self.rect.top = player.rect.top - 10
-    
-    def update(self):
-        self.rect.top = self.rect.top - SHOT_SPEED
+#class Shot(Actor):
+#    "The big payload"
+#    def __init__(self, player):
+#        Actor.__init__(self, Img.shot)
+#        self.rect.centerx = player.rect.centerx
+#        self.rect.top = player.rect.top - 10
+#
+#    def update(self):
+#        self.rect.top = self.rect.top - SHOT_SPEED
 
 
 
@@ -169,7 +169,7 @@ def main():
 # Initialize Game Actors
     player = Player()
     aliens = [Alien()]
-    shots = []
+#    shots = []
     explosions = []
 
     # Main loop
@@ -183,7 +183,7 @@ def main():
             break
         
         # Clear screen and update actors
-        for actor in [player] + aliens + shots + explosions:
+        for actor in [player] + aliens + explosions:
             actor.erase(screen, background)
             actor.update()
         
@@ -191,10 +191,10 @@ def main():
         for e in explosions:
             if e.life <= 0:
                 explosions.remove(e)
-        for s in shots:
-            if s.rect.top <= 0:
-                shots.remove(s)
-    
+#        for s in shots:
+#            if s.rect.top <= 0:
+#                shots.remove(s)
+
         # Move the player
         mousex, mousey = pygame.mouse.get_pos()
         direction = 0
@@ -204,6 +204,11 @@ def main():
             direction = 1
         else:
             direction = 0
+
+
+
+
+       
 
 
         # direction = keystate[K_RIGHT] - keystate[K_LEFT]
@@ -219,9 +224,9 @@ def main():
         player.move(direction)
         
         # Create new shots
-        if not player.reloading and keystate[K_SPACE] and len(shots) < MAX_SHOTS:
-            shots.append(Shot(player))
-        player.reloading = keystate[K_SPACE]
+#        if not player.reloading and keystate[K_SPACE] and len(shots) < MAX_SHOTS:
+#            shots.append(Shot(player))
+#        player.reloading = keystate[K_SPACE]
 
         # Create new alien
         if not int(random.random() * ALIEN_ODDS):
@@ -239,17 +244,17 @@ def main():
             explosions.append(Explosion(player))
             aliens.remove(alien)
             player.alive = 0
-        for shot in shots:
-            hit = shot.rect.collidelist(alienrects)
-            if hit != -1:
-                alien = aliens[hit]
-                explosions.append(Explosion(alien))
-                shots.remove(shot)
-                aliens.remove(alien)
-                break
+#        for shot in shots:
+#            hit = shot.rect.collidelist(alienrects)
+#            if hit != -1:
+#                alien = aliens[hit]
+#                explosions.append(Explosion(alien))
+#                shots.remove(shot)
+#                aliens.remove(alien)
+#                break
 
         # Draw everybody
-        for actor in [player] + aliens + shots + explosions:
+        for actor in [player] + aliens + explosions:
             actor.draw(screen)
         pygame.display.update(dirtyrects)
         dirtyrects = []
