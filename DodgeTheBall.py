@@ -23,13 +23,13 @@ if not pygame.image.get_extended():
 
 #constants
 FRAMES_PER_SEC = 40
-PLAYER_SPEED   = 12
-MAX_SHOTS      = 2
+PLAYER_SPEED = 12
+MAX_SHOTS = 2
 #SHOT_SPEED     = 10
-ALIEN_SPEED    = 5
-ALIEN_ODDS     = 150
-EXPLODE_TIME   = 6
-SCREENRECT     = Rect(0, 0, 1024, 768)
+ALIEN_SPEED = 5
+
+EXPLODE_TIME = 6
+SCREENRECT = Rect(0, 0, 1024, 768)
 
 
 #some globals for friendly access
@@ -150,12 +150,16 @@ class Explosion(Actor):
 def main():
 	"Run me for adrenaline"
 	global dirtyrects
+	global alien_odds
+	alien_odds = 25
 	
 	# Initialize SDL components
 	pygame.init()
 	screen = pygame.display.set_mode(SCREENRECT.size, 0)
 
 	clock = pygame.time.Clock()
+
+	level = 0
 
 	# Load the Resources
 	Img.background = load_image('background.gif', 0)
@@ -247,6 +251,23 @@ def main():
 
 
 		total_seconds = pygame.time.get_ticks() // 1000
+
+		if total_seconds >= 7:
+			alien_odds = alien_odds - 5
+			level = 1
+		elif total_seconds >= 60:
+			alien_odds = alien_odds - 5
+			level = 2
+		elif total_seconds >= 60:
+			alien_odds = alien_odds - 5
+			level = 3
+		elif total_seconds >= 60:
+			alien_odds = alien_odds - 5
+			level = 4
+		elif total_seconds >= 60:
+			alien_odds = alien_odds - 5
+			level = 5
+
 	
 		# Divide by 60 to get total minutes
 		minutes = total_seconds // 60
@@ -297,7 +318,7 @@ def main():
 #        player.reloading = keystate[K_SPACE]
 
 		# Create new alien
-		if not int(random.random() * ALIEN_ODDS):
+		if not int(random.random() * alien_odds):
 			aliens.append(Alien())
 		
 		# Detect collisions
