@@ -27,7 +27,7 @@ PLAYER_SPEED   = 12
 MAX_SHOTS      = 2
 #SHOT_SPEED     = 10
 ALIEN_SPEED    = 5
-ALIEN_ODDS     = 25
+ALIEN_ODDS     = 150
 EXPLODE_TIME   = 6
 SCREENRECT     = Rect(0, 0, 1024, 768)
 
@@ -167,11 +167,21 @@ def main():
 	Img.alien3 = load_image('alien3.gif', 1)
 	Img.player = load_image('oldplayer.gif', 1)
 	Img.explosion = load_image('explosion1.gif', 1)
+	Img.leftButton = load_image('leftButton.gif', 1)
+	Img.rightButton = load_image('rightButton.gif', 1)
+	Img.divider = load_image('divider.gif', 1)
 	
-	# Create the background
+	#Apparently the only way to fill the screen properly is to do it in sections!?
 	background = pygame.Surface(SCREENRECT.size)
 	for x in range(0, SCREENRECT.width, Img.background.get_width()):
 		background.blit(Img.background, (x, 0))
+
+	background.blit(Img.divider, (329, 0))
+	background.blit(Img.divider, (670, 0))
+
+
+	#screen.fill(pygame.Color("white"))
+	#background.blit(Img.markedBackground, (0, 0))
 	screen.blit(background, (0,0))
 	pygame.display.flip()
 
@@ -209,6 +219,32 @@ def main():
 #            if s.rect.top <= 0:
 #                shots.remove(s)
 
+		#screen.fill(pygame.Color("white")) #Clears screen so that time etc. can be re-blit
+		screen.blit(background, (0,0))
+
+		# Move the player
+		mousex, mousey = pygame.mouse.get_pos()
+		direction = 0
+		if mousex < SCREENRECT.width // 3:
+			direction = -1
+		elif mousex > (SCREENRECT.width // 3) * 2:
+			direction = 1
+		else:
+			direction = 0
+
+		player.move(direction)
+
+		if direction == -1:
+			screen.blit(Img.leftButton, (0, 0))
+		elif direction == 1:
+			screen.blit(Img.rightButton, (666, 0))
+
+		# leftRect = Img.leftButton.get_rect()
+		# screen.blit(Img.leftButton, (0, 0))
+
+		# pygame.display.flip()
+			# dirtyrects.append(r)
+
 
 		total_seconds = pygame.time.get_ticks() // 1000
 	
@@ -222,7 +258,7 @@ def main():
 		output_string = "Time: {0:02}:{1:02}".format(minutes, seconds)
 		prevTime = output_string
 
-		screen.fill(pygame.Color("white")) #Clears screen so that time can be re-blit
+		# screen.fill(pygame.Color("white")) #Clears screen so that time can be re-blit
 
 		text = myfont.render(output_string, True, (0,0,0))
 		screen.blit(text, (0,0))
@@ -231,22 +267,7 @@ def main():
 		#     total_seconds = 0
 		# frame_count += 1
 		# clock.tick(frame_rate)
-		pygame.display.flip()
-
-
-
-		# Move the player
-		mousex, mousey = pygame.mouse.get_pos()
-		direction = 0
-		if mousex < SCREENRECT.width // 3:
-			direction = -1
-		elif mousex > (SCREENRECT.width // 3) * 2:
-			direction = 1
-		else:
-			direction = 0
-
-
-
+	
 
 	   
 
@@ -268,7 +289,7 @@ def main():
 
 
 		# direction = keystate[K_RIGHT] - keystate[K_LEFT]
-		player.move(direction)
+		
 		
 		# Create new shots
 #        if not player.reloading and keystate[K_SPACE] and len(shots) < MAX_SHOTS:
@@ -303,6 +324,10 @@ def main():
 		# Draw everybody
 		for actor in [player] + aliens + explosions:
 			actor.draw(screen)
+
+
+		pygame.display.flip()
+
 		pygame.display.update(dirtyrects)
 		dirtyrects = []
 
