@@ -126,7 +126,8 @@ class Alien(Actor):
 class Explosion(Actor):
 	"Beware the fury"
 	def __init__(self, actor):
-		Actor.__init__(self, Img.explosion)
+		Actor.__init__(self, Img.splat)
+
 		self.life = EXPLODE_TIME
 		self.rect.center = actor.rect.center
 	
@@ -151,8 +152,7 @@ def main():
 	"Run me for adrenaline"
 	global dirtyrects
 	global alien_odds
-	alien_odds = 25
-	
+	alien_odds = 50
 	# Initialize SDL components
 	pygame.init()
 	screen = pygame.display.set_mode(SCREENRECT.size, 0)
@@ -170,7 +170,7 @@ def main():
 	Img.alien2 = load_image('alien2.gif', 1)
 	Img.alien3 = load_image('alien3.gif', 1)
 	Img.player = load_image('oldplayer.gif', 1)
-	Img.explosion = load_image('explosion1.gif', 1)
+	Img.splat = load_image('splat.gif', 1)
 	Img.leftButton = load_image('leftButton.gif', 1)
 	Img.rightButton = load_image('rightButton.gif', 1)
 	Img.divider = load_image('divider.gif', 1)
@@ -197,6 +197,8 @@ def main():
 
 	myfont = pygame.font.SysFont('Comic Sans MS', 30)
 	prevTime = ""
+
+	endWait = False
 
 	# Main loop
 	while player.alive or explosions:
@@ -252,20 +254,20 @@ def main():
 
 		total_seconds = pygame.time.get_ticks() // 1000
 
-		if total_seconds >= 7:
+		if total_seconds >= 10 and level == 0:
 			alien_odds = alien_odds - 5
 			level = 1
-		elif total_seconds >= 60:
+		elif total_seconds >= 20 and level == 1:
 			alien_odds = alien_odds - 5
 			level = 2
-		elif total_seconds >= 60:
+		elif total_seconds >= 30 and level == 2:
 			alien_odds = alien_odds - 5
 			level = 3
-		elif total_seconds >= 60:
-			alien_odds = alien_odds - 5
+		elif total_seconds >= 40 and level == 3:
+			alien_odds = alien_odds - 10
 			level = 4
-		elif total_seconds >= 60:
-			alien_odds = alien_odds - 5
+		elif total_seconds >= 50 and level == 4:
+			alien_odds = alien_odds - 10
 			level = 5
 
 	
@@ -282,7 +284,9 @@ def main():
 		# screen.fill(pygame.Color("white")) #Clears screen so that time can be re-blit
 
 		text = myfont.render(output_string, True, (0,0,0))
-		screen.blit(text, (0,0))
+		levelText = myfont.render("Level " + str(level), True, (0, 0, 0))
+		screen.blit(text, (10,0))
+		screen.blit(levelText, (910, 0))
 		# total_seconds = start_time - (frame_count // frame_rate)
 		# if total_seconds < 0:
 		#     total_seconds = 0
@@ -330,9 +334,12 @@ def main():
 		if hit != -1:
 			alien = aliens[hit]
 			explosions.append(Explosion(alien))
-			explosions.append(Explosion(player))
+			# explosions.append(Explosion(player))
 			aliens.remove(alien)
 			player.alive = 0
+			
+			
+			endWait = True
 #        for shot in shots:
 #            hit = shot.rect.collidelist(alienrects)
 #            if hit != -1:
@@ -346,13 +353,21 @@ def main():
 		for actor in [player] + aliens + explosions:
 			actor.draw(screen)
 
+		if endWait:
+			# screen.blit(background, (0,0))
+			looseText = myfont.render("Game Over :(", True, (0,0,0))
+			screen.blit(looseText, (430,300))
 
 		pygame.display.flip()
 
 		pygame.display.update(dirtyrects)
 		dirtyrects = []
 
-	pygame.time.wait(50)
+	if endWait:
+		pygame.time.wait(2300)
+	else:
+		pygame.time.wait(50)
+
 
 
 #if python says run, let's run!
